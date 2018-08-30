@@ -1,7 +1,12 @@
 var express = require('express')
 var router = express.Router()
 var Mock = require('mockjs')
+const EVENT = 'EVENT'
+const TAG = 'TAG'
+const TAG_EVENT = 'TAG_EVENT'
 
+let {writeJson, deleteJson, changeJson} = require('./dao')
+deleteJson(2,TAG)
 // function rangeDate(min,max) {
 //     var min = min,
 //       max = max,
@@ -91,6 +96,7 @@ router.get('/test',function(req, res, next) {
     res.send('hello etps!')
 })
 router.get('/tagsall', function(req, res, next) {
+
     res.send(gettagsall().list)
 })
 router.get('/eventsall', function(req, res, next) {
