@@ -31,6 +31,16 @@ function selectJson(id, type){
         }
     })
 }
+function selectJsonAll(type) {
+    let url = getUrl(type)
+    fs.readFile(url, function(err, data){
+        if(err) {
+            return console.error(err)
+        }
+        let elem = data.toString()
+        return JSON.parse(elem).data
+    })
+}
 function selectJsonTagEvent(Tagpkey){
     fs.readFile(tag_eventUrl, function(err, data) {
         if(err) {
@@ -133,5 +143,8 @@ function changeJson(id, params, type){
 module.exports =  {
     writeJson,
     deleteJson,
-    changeJson
+    changeJson,
+    selectJson,
+    selectJsonTagEvent,
+    selectJsonAll,
 }

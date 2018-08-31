@@ -5,8 +5,7 @@ const EVENT = 'EVENT'
 const TAG = 'TAG'
 const TAG_EVENT = 'TAG_EVENT'
 
-let {writeJson, deleteJson, changeJson} = require('./dao')
-deleteJson(2,TAG)
+let {writeJson, deleteJson, changeJson, selectJson, selectJsonTagEvent, selectJsonAll} = require('./dao')
 // function rangeDate(min,max) {
 //     var min = min,
 //       max = max,
@@ -72,26 +71,33 @@ var eventstagsdata = Mock.mock({
     }]
 })
 function gettagsall() {
-    return tagsdata
+    return selectJsonAll('TAG')
 }
 function geteventsall() {
-    return eventsdata
+    return selectJsonAll('EVENT')
 }
 function gettageventsall() {
-    return eventstagsdata
+    return selectJsonAll('TAG_EVENT')
 }
 function gettagsbyid(pkey) {
-    return getItem(tagsdata.list,{'pKey': pkey})
+    return selectJson(pkey, 'TAG')
 }
 function geteventsbyid(pkey) {
-    return getItem(eventsdata.list, {'pKey': pkey})
+    return selectJson(pkey, 'EVENT')
 }
 function geteventsbytag(tagpkey) {
-    return getItems(eventstagsdata.list, {'tagkey': tagpkey})
+    let eventlist = []
+    let eventIds = selectJsonTagEvent(tagpkey)
+    for(let k in eventIds) {
+        let eventId = eventIds[k]
+        let event = selectJson(eventId, 'EVENT')
+        eventlist.push(event)
+    }
+    return eventlist
 }
-function gettagbyevents(evenkey) {
-    return getItems(eventstagsdata.list, {'eventkey': evenkey})
-}
+// function gettagbyevents(evenkey) {
+//     return getItems(eventstagsdata.list, {'eventkey': evenkey})
+// }
 router.get('/test',function(req, res, next) {
     res.send('hello etps!')
 })
