@@ -4,8 +4,8 @@ var Mock = require('mockjs')
 const EVENT = 'EVENT'
 const TAG = 'TAG'
 const TAG_EVENT = 'TAG_EVENT'
-
-let {writeJson, deleteJson, changeJson, selectJson, selectJsonTagEvent, selectJsonAll} = require('./dao')
+let {getnewJson} = require('./util')
+let {deleteTag, writeJson, deleteJson, changeJson, selectJson, selectJsonTagEvent, selectJsonAll} = require('./dao')
 // function rangeDate(min,max) {
 //     var min = min,
 //       max = max,
@@ -70,9 +70,9 @@ var eventstagsdata = Mock.mock({
         'eventkey|1-100': 100
     }]
 })
-function gettagsall() {
-    return selectJsonAll('TAG')
-}
+// function gettagsall() {
+//     return selectJsonAll('TAG')
+// }
 function geteventsall() {
     return selectJsonAll('EVENT')
 }
@@ -95,16 +95,64 @@ function geteventsbytag(tagpkey) {
     }
     return eventlist
 }
+function addtag(param) {
+    return writeJson(param, 'TAG')
+}
+function changetag(id, param) {
+    return changeJson(id, param, 'TAG')
+}
+
+// function addevent (param) {
+//     {
+//         Subject, datetime, Content
+//     }
+//     writeJson(param, 'EVENT')
+//     writeJson(param, 'TAG_EVENT')
+// }
+
 // function gettagbyevents(evenkey) {
 //     return getItems(eventstagsdata.list, {'eventkey': evenkey})
 // }
 router.get('/test',function(req, res, next) {
     res.send('hello etps!')
 })
-router.get('/tagsall', function(req, res, next) {
 
-    res.send(gettagsall().list)
+
+
+
+router.get('/tag/add', function(req, res, next){
+    let param = {}
+    let state = false
+    if(req.query.name && req.query.parent){
+        param.Name=req.query.name
+        param.ms_Tag_Parent= req.query.parent
+        state = addtag(param)
+    }
 })
+router.get('/tag/change', function(req, res, next) {
+    let param = {}
+    let state = false
+    if(req.query.name && req.query.id){
+        param.Name = req.query.name
+        state = changetag(req.query.id, param)
+    }
+})
+router.get('/tag/delete', function(req, res, next){
+    let state = deleteTag(req.query.id)
+
+})
+router.get('/tag/select', function(req, res, next) {
+    getnewJson(function(result){
+        console.log(result)
+        res.send(result)
+    })
+})
+
+
+
+
+
+
 router.get('/eventsall', function(req, res, next) {
     res.send(geteventsall().list)
 })

@@ -8,11 +8,11 @@
         {
             "pKey": 2,
             "ms_EventpKey": 1,
-            "ms_TagpKey": 0
+            "ms_TagpKey": 3
         },
         {
             "ms_EventpKey": 3,
-            "ms_TagpKey": 0,
+            "ms_TagpKey": 3,
             "pKey": 3
         }
     ],

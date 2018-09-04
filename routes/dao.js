@@ -75,8 +75,10 @@ function writeJson(params, type){
         fs.writeFile(url, str, function(err){
             if(err){
                 console.error(err);
+                return false
             }
             console.log('----------新增成功-------------');
+            return true
         })
     })
 }
@@ -90,7 +92,7 @@ function deleteJson(id, type){
         elem = JSON.parse(elem);
         //把数据读出来删除
         for(var i = 0; i < elem.data.length;i++){
-            if(id == elem.data[i].pKey){
+            if(id === elem.data[i].pKey){
                 //console.log(elem.data[i])
                 elem.data.splice(i,1);
             }
@@ -102,16 +104,55 @@ function deleteJson(id, type){
         fs.writeFile(url, str, function(err){
             if(err){
                 console.error(err);
+                return false
             }
             console.log("----------删除成功------------");
+            return true
         })
     })
+}
+function deleteTag(id){
+    fs.readFile('./tags.json', function(err,data){
+        if(err){
+            return console.error(err);
+        }
+        var elem = data.toString();
+        elem = JSON.parse(elem);
+        //把数据读出来删除
+        let deletedparent = 0
+        for(var i = 0; i < elem.data.length;i++){
+            if(id == elem.data[i].pKey){
+                //console.log(elem.data[i])
+                deletedparent = elem.data[i].ms_Tag_Parent
+                elem.data.splice(i,1);
+            }
+        }
+        for(let k in elem.data) {
+            if(id == elem.data[k].ms_Tag_Parent){
+                elem.data[k].ms_Tag_Parent = deletedparent
+            }
+        }
+        console.log(elem.data);
+        elem.total = elem.data.length;
+        var str = JSON.stringify(elem);
+        //然后再把数据写进去
+        fs.writeFile('./tags.json', str, function(err){
+            if(err){
+                console.error(err);
+                return false
+            }
+            console.log("----------删除成功------------");
+            return true
+        })
+    })
+
 }
 function changeJson(id, params, type){
     let url = getUrl(type)
     fs.readFile(url, function(err,data){
         if(err){
             console.error(err);
+            return false
         }
         var elem = data.toString();
         elem = JSON.parse(elem);
@@ -133,9 +174,11 @@ function changeJson(id, params, type){
         fs.writeFile(url, str,function(err){
             if(err){
                 console.error(err);
+                return false
             }
             console.log('--------------------修改成功');
             console.log(elem.data);
+            return true
         })
     })
 }
@@ -147,4 +190,5 @@ module.exports =  {
     selectJson,
     selectJsonTagEvent,
     selectJsonAll,
+    deleteTag
 }
